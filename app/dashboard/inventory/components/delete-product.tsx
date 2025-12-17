@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -51,7 +51,12 @@ export function DeleteProduct({ id }: { id: string }) {
             <AlertDialogCancel onClick={() => setOpen(false)}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleSubmit}>Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={handleSubmit}
+              className={buttonVariants({ variant: "destructive" })}
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
