@@ -33,26 +33,30 @@ export function AppSidebar() {
                 {
                   title: "Dashboard",
                   url: "/dashboard",
-                  Icon: LayoutDashboard,
+                  icon: LayoutDashboard,
                 },
                 {
                   title: "Inventory",
-                  url: "/inventory",
-                  Icon: NotebookTabs,
+                  url: "/dashboard/inventory",
+                  icon: NotebookTabs,
                 },
-              ].map(({ title, url, Icon }) => (
-                <SidebarMenuItem key={title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname.startsWith(url)}
-                    size="lg"
-                  >
-                    <Link href={url}>
-                      <Icon /> {title}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              ].map(({ title, url, icon }) => {
+                const LinkIcon = icon;
+
+                return (
+                  <SidebarMenuItem key={title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === url}
+                      size="lg"
+                    >
+                      <Link href={url}>
+                        <LinkIcon /> {title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
