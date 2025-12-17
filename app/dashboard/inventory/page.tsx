@@ -1,6 +1,5 @@
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { AppHeader } from "~/components/app-header";
-import { Button } from "~/components/ui/button";
 import {
   InputGroup,
   InputGroupAddon,
@@ -9,6 +8,7 @@ import {
 
 import { ProductTable } from "./components/product-table";
 import { PaginationBar } from "./components/pagination-bar";
+import { AddProduct } from "./components/add-product";
 
 export default async function Page({
   searchParams,
@@ -32,9 +32,7 @@ export default async function Page({
                 placeholder="Search for products..."
               />
             </InputGroup>
-            <Button className="w-full sm:w-auto">
-              <Plus /> Add Product
-            </Button>
+            <AddProduct />
           </div>
           <ProductTable page={page} />
           <PaginationBar page={page} />
