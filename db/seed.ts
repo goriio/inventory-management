@@ -1,13 +1,18 @@
+"use server";
+
 import { db } from "~/db";
 import { products } from "~/db/schema";
 
-export async function GET() {
+export async function seed(userId: string) {
+  const endTime = Date.now();
+
+  const startDate = new Date();
+  startDate.setMonth(startDate.getMonth() - 4);
   const startTime = new Date("2025-10-01").getTime();
-  const endTime = new Date("2025-12-12").getTime();
 
   await db.insert(products).values(
     Array.from({ length: 57 }).map((_, index) => ({
-      userId: "R5LLUGsKwwuZ8AqUYuUgKMERxIISWKcT",
+      userId: userId,
       name: `Product ${index + 1}`,
       price: parseFloat((Math.random() * 100).toFixed(2)),
       description: generateDescription(),
@@ -47,15 +52,14 @@ function getRandom(arr: string[]) {
 }
 
 function generateDescription() {
-  // 30% chance to return nothing
   if (Math.random() < 0.3) return null;
 
-  // Decide number of sentences (1-3)
   const numSentences = Math.floor(Math.random() * 3) + 1;
+
   let description = "";
 
   for (let i = 0; i < numSentences; i++) {
-    const sentenceType = Math.floor(Math.random() * 3); // random sentence structure
+    const sentenceType = Math.floor(Math.random() * 3);
 
     let sentence = "";
     switch (sentenceType) {
