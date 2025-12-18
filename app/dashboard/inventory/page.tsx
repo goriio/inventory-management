@@ -1,21 +1,21 @@
-import { Search } from "lucide-react";
 import { AppHeader } from "~/components/app-header";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "~/components/ui/input-group";
 
 import { ProductTable } from "./components/product-table";
 import { PaginationBar } from "./components/pagination-bar";
 import { AddProduct } from "./components/add-product";
+import { Search } from "~/components/search";
+import { getProductsPages } from "~/data/products";
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ page: string }>;
+  searchParams: Promise<{ page: string; query: string }>;
 }) {
-  const page = Number((await searchParams).page) || 1;
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const query = params.query || "";
+
+  const totalPages = await getProductsPages(query);
 
   return (
     <>
@@ -23,19 +23,11 @@ export default async function Page({
       <div className="max-w-7xl w-full mx-auto p-4 md:px-8">
         <div className="bg-card rounded-lg overflow-hidden border border-border">
           <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 px-8 py-6">
-            <InputGroup className="max-w-md">
-              <InputGroupAddon>
-                <Search />
-              </InputGroupAddon>
-              <InputGroupInput
-                className="max-w-md"
-                placeholder="Search for products..."
-              />
-            </InputGroup>
+            <Search placeholder="Search for products..." />
             <AddProduct />
           </div>
-          <ProductTable page={page} />
-          <PaginationBar page={page} />
+          <ProductTable page={page} query={query} />
+          <PaginationBar totalPages={totalPages} />
         </div>
       </div>
     </>

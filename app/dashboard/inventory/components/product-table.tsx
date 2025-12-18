@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { ProductTableBodySkeleton } from "./product-table-body-skeleton";
 import { EditProductForm } from "./edit-product-form";
 
-export function ProductTable({ page }: { page: number }) {
+export function ProductTable({ page, query }: { page: number; query: string }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -29,15 +29,21 @@ export function ProductTable({ page }: { page: number }) {
           </tr>
         </thead>
         <Suspense key={page} fallback={<ProductTableBodySkeleton />}>
-          <ProductTableBody page={page} />
+          <ProductTableBody page={page} query={query} />
         </Suspense>
       </table>
     </div>
   );
 }
 
-async function ProductTableBody({ page }: { page: number }) {
-  const products = await getProducts({ page });
+async function ProductTableBody({
+  page,
+  query,
+}: {
+  page: number;
+  query: string;
+}) {
+  const products = await getProducts({ page, query });
 
   return (
     <tbody>
