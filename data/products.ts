@@ -1,4 +1,4 @@
-import { count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "~/db";
 import { products } from "~/db/schema";
@@ -24,6 +24,21 @@ export async function getProducts({ page }: { page: number }) {
     .offset(offset);
 
   return data;
+}
+
+export async function getProductById(id: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const data = await db
+    .select()
+    .from(products)
+    .where(and(eq(products.userId, session.user.id), eq(products.id, id)));
+
+  return data[0];
 }
 
 export async function getProductsPages() {

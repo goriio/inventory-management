@@ -13,10 +13,7 @@ export async function createProduct(data: ProductFormSchema) {
     headers: await headers(),
   });
 
-  if (!session)
-    return {
-      message: "Unauthorized.",
-    };
+  if (!session) throw new Error("Unauthorized.");
 
   const parsed = productFormSchema.safeParse(data);
 
@@ -44,15 +41,36 @@ export async function createProduct(data: ProductFormSchema) {
   revalidatePath("/dashboard/inventory");
 }
 
+export async function editProduct(id: string, data: ProductFormSchema) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized.");
+
+  const parsed = productFormSchema.safeParse(data);
+
+  if (!parsed.success) {
+    throw new Error("Validation Error: Failed to edit product.");
+  }
+
+  try {
+    await db.update(products).set(parsed.data).where(eq(products.id, id));
+  } catch (error) {
+    if (error instanceof DrizzleError)
+      throw new Error("Database Error: Failed to edit product.");
+    throw error;
+  }
+
+  revalidatePath("/dashboard/inventory");
+}
+
 export async function deleteProduct(id: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  if (!session)
-    return {
-      message: "Unauthorized.",
-    };
+  if (!session) throw new Error("Unauthorized.");
 
   await db
     .delete(products)

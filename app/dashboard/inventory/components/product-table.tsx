@@ -1,11 +1,10 @@
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import { Edit } from "lucide-react";
-import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent } from "~/components/ui/tooltip";
 import { DeleteProduct } from "./delete-product";
 import { getProducts } from "~/data/products";
 import { Suspense } from "react";
 import { ProductTableBodySkeleton } from "./product-table-body-skeleton";
+import { EditProductForm } from "./edit-product-form";
 
 export function ProductTable({ page }: { page: number }) {
   return (
@@ -62,11 +61,11 @@ async function ProductTableBody({ page }: { page: number }) {
                 "-"
               )}
             </td>
-            <td className="px-8 py-4 text-right">{product.quantity}</td>
+            <td className="px-8 py-4 text-center">{product.quantity}</td>
             <td className="px-8 py-4 text-right">
               PHP {product.price.toFixed(2)}
             </td>
-            <td className="px-8 py-4 text-right">
+            <td className="px-8 py-4 text-center">
               {product.lowStockThreshold}
             </td>
             <td className="px-8 py-4">
@@ -75,15 +74,13 @@ async function ProductTableBody({ page }: { page: number }) {
             <td className="px-8 py-4">
               <div className="flex items-center gap-1">
                 <Tooltip>
-                  <TooltipTrigger>
-                    <Button variant="ghost">
-                      <Edit />
-                    </Button>
+                  <TooltipTrigger asChild>
+                    <EditProductForm key={product.id} product={product} />
                   </TooltipTrigger>
                   <TooltipContent>Edit</TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <DeleteProduct id={product.id} />
                   </TooltipTrigger>
                   <TooltipContent>Delete</TooltipContent>
