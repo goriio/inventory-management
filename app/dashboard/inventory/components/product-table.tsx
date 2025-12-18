@@ -5,6 +5,16 @@ import { getProducts } from "~/data/products";
 import { Suspense } from "react";
 import { ProductTableBodySkeleton } from "./product-table-body-skeleton";
 import { EditProductForm } from "./edit-product-form";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/components/ui/empty";
+import { PackageSearch, ShoppingCart } from "lucide-react";
+import { AddProduct } from "./add-product";
 
 export function ProductTable({ page, query }: { page: number; query: string }) {
   return (
@@ -44,6 +54,49 @@ async function ProductTableBody({
   query: string;
 }) {
   const products = await getProducts({ page, query });
+
+  if (query && products.length === 0)
+    return (
+      <tbody>
+        <td className="max-w-lg h-96 mx-auto text-center" colSpan={7}>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <PackageSearch />
+              </EmptyMedia>
+              <EmptyTitle>No results for: {query}</EmptyTitle>
+              <EmptyDescription>
+                We couldn&apos;t find anything that matches your search.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        </td>
+      </tbody>
+    );
+
+  if (!query && products.length === 0) {
+    return (
+      <tbody>
+        <td className="max-w-lg h-96 mx-auto text-center" colSpan={7}>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <ShoppingCart />
+              </EmptyMedia>
+              <EmptyTitle>No Products Yet</EmptyTitle>
+              <EmptyDescription>
+                You haven&apos;t created a product yet. Get started by creating
+                a new product.
+              </EmptyDescription>
+              <EmptyContent>
+                <AddProduct />
+              </EmptyContent>
+            </EmptyHeader>
+          </Empty>
+        </td>
+      </tbody>
+    );
+  }
 
   return (
     <tbody>

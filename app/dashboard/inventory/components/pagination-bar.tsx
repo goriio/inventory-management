@@ -29,9 +29,11 @@ export function PaginationBar({ totalPages }: { totalPages: number }) {
 
   return (
     <div className="flex flex-col gap-6 sm:flex-row items-center justify-between px-8 py-6">
-      <p className="text-xs text-gray-600">
-        Currently on {page} of {totalPages} pages
-      </p>
+      {totalPages > 0 && (
+        <p className="text-xs text-gray-600">
+          Currently on {page} of {totalPages} pages
+        </p>
+      )}
       <Pagination className="mx-0 w-auto">
         <PaginationContent>
           {page > 1 && (
