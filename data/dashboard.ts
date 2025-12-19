@@ -1,4 +1,4 @@
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, eq, sql, sum } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "~/db";
 import { products } from "~/db/schema";
@@ -29,4 +29,31 @@ export async function getTotalProductsPerWeek() {
     .orderBy(week);
 
   return totalProductsPerWeek;
+}
+
+export async function getInventorySummary() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const [quantity, value] = await Promise.all([
+    db
+      .select({
+        quantityInHand: sum(products.quantity),
+      })
+      .from(products)
+      .where(eq(products.userId, session.user.id)),
+    db
+      .select({
+        totalValue: sql<number>`SUM(${products.quantity} * ${products.price})`,
+      })
+      .from(products)
+      .where(eq(products.userId, session.user.id)),
+  ]);
+  return {
+    quantityInHand: quantity[0].quantityInHand,
+    totalValue: value[0].totalValue,
+  };
 }

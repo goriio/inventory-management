@@ -69,7 +69,12 @@ export function ProductsChart({
                 });
               }}
             />
-            <YAxis dataKey="total" tickLine={false} axisLine={false} />
+            <YAxis
+              dataKey="total"
+              width={24}
+              tickLine={false}
+              axisLine={false}
+            />
             <ChartTooltip
               cursor={false}
               content={
