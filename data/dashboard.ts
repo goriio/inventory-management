@@ -1,4 +1,4 @@
-import { and, count, eq, sql, sum } from "drizzle-orm";
+import { and, count, eq, lte, not, sql, sum } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "~/db";
 import { products } from "~/db/schema";
@@ -38,22 +38,71 @@ export async function getInventorySummary() {
 
   if (!session) throw new Error("Unauthorized");
 
-  const [quantity, value] = await Promise.all([
+  const [quantityInHand, totalValue] = await Promise.all([
     db
       .select({
         quantityInHand: sum(products.quantity),
       })
       .from(products)
-      .where(eq(products.userId, session.user.id)),
+      .where(eq(products.userId, session.user.id))
+      .then((result) => result[0].quantityInHand),
     db
       .select({
         totalValue: sql<number>`SUM(${products.quantity} * ${products.price})`,
       })
       .from(products)
-      .where(eq(products.userId, session.user.id)),
+      .where(eq(products.userId, session.user.id))
+      .then((result) => result[0].totalValue),
+    ,
   ]);
   return {
-    quantityInHand: quantity[0].quantityInHand,
-    totalValue: value[0].totalValue,
+    quantityInHand,
+    totalValue,
+  };
+}
+
+export async function getProductDetails() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const [lowStockItems, outOfStockItems, noOfItems] = await Promise.all([
+    db
+      .select({
+        lowStockItems: count(),
+      })
+      .from(products)
+      .where(
+        and(
+          eq(products.userId, session.user.id),
+          lte(products.quantity, products.lowStockThreshold),
+          not(eq(products.quantity, 0))
+        )
+      )
+      .then((result) => result[0].lowStockItems),
+    db
+      .select({
+        outOfStockItems: count(),
+      })
+      .from(products)
+      .where(
+        and(eq(products.userId, session.user.id), eq(products.quantity, 0))
+      )
+      .then((result) => result[0].outOfStockItems),
+    db
+      .select({
+        noOfItems: count(),
+      })
+      .from(products)
+      .where(and(eq(products.userId, session.user.id)))
+      .then((result) => result[0].noOfItems),
+  ]);
+
+  return {
+    lowStockItems,
+    outOfStockItems,
+    noOfItems,
   };
 }

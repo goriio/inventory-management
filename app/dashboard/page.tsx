@@ -3,6 +3,7 @@ import { ProductsChartContainer } from "./components/products-chart-container";
 import { Suspense } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { InventorySummary } from "./components/inventory-summary";
+import { ProductDetails } from "./components/product-details";
 
 export default function Page() {
   return (
@@ -19,6 +20,11 @@ export default function Page() {
             fallback={<Skeleton className="w-full h-64 bg-card shadow" />}
           >
             <InventorySummary />
+          </Suspense>
+          <Suspense
+            fallback={<Skeleton className="w-full h-64 bg-card shadow" />}
+          >
+            <ProductDetails />
           </Suspense>
         </div>
       </div>
