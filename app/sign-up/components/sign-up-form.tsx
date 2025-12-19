@@ -41,7 +41,7 @@ const formSchema = z.object({
     .max(32, "Name must be at most 32 characters."),
   email: z
     .email("Email must be valid.")
-    .max(100, "Description must be at most 100 characters."),
+    .max(100, "Email must be at most 100 characters."),
   password: z
     .string("Password is required.")
     .min(8, "Password must be at least 8 characters"),

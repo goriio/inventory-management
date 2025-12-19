@@ -28,7 +28,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Product } from "~/db/schema";
 
-export function EditProductForm({ product }: { product: Product }) {
+export function EditProduct({ product }: { product: Product }) {
   const [open, setOpen] = useState(false);
 
   const {

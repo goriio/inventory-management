@@ -4,7 +4,7 @@ import { DeleteProduct } from "./delete-product";
 import { getProducts } from "~/data/products";
 import { Suspense } from "react";
 import { ProductTableBodySkeleton } from "./product-table-body-skeleton";
-import { EditProductForm } from "./edit-product-form";
+import { EditProduct } from "./edit-product";
 import {
   Empty,
   EmptyContent,
@@ -38,7 +38,10 @@ export function ProductTable({ page, query }: { page: number; query: string }) {
             </th>
           </tr>
         </thead>
-        <Suspense key={page} fallback={<ProductTableBodySkeleton />}>
+        <Suspense
+          key={`${page}-${query}`}
+          fallback={<ProductTableBodySkeleton />}
+        >
           <ProductTableBody page={page} query={query} />
         </Suspense>
       </table>
@@ -58,19 +61,21 @@ async function ProductTableBody({
   if (query && products.length === 0)
     return (
       <tbody>
-        <td className="max-w-lg h-96 mx-auto text-center" colSpan={7}>
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <PackageSearch />
-              </EmptyMedia>
-              <EmptyTitle>No results for: {query}</EmptyTitle>
-              <EmptyDescription>
-                We couldn&apos;t find anything that matches your search.
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        </td>
+        <tr>
+          <td className="max-w-lg h-96 mx-auto text-center" colSpan={7}>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <PackageSearch />
+                </EmptyMedia>
+                <EmptyTitle>No results for: {query}</EmptyTitle>
+                <EmptyDescription>
+                  We couldn&apos;t find anything that matches your search.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          </td>
+        </tr>
       </tbody>
     );
 
@@ -134,7 +139,7 @@ async function ProductTableBody({
               <div className="flex items-center gap-1">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <EditProductForm key={product.id} product={product} />
+                    <EditProduct product={product} />
                   </TooltipTrigger>
                   <TooltipContent>Edit</TooltipContent>
                 </Tooltip>

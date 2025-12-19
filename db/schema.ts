@@ -99,6 +99,21 @@ export const products = pgTable("products", {
     .notNull(),
 });
 
+export const customers = pgTable("customers", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  phoneNumber: text("phone_number").unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
   accounts: many(accounts),
@@ -119,3 +134,4 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 }));
 
 export type Product = typeof products.$inferSelect;
+export type Customer = typeof customers.$inferSelect;

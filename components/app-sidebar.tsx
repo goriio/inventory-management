@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronUp, LayoutDashboard, NotebookTabs } from "lucide-react";
+import { ChevronUp, LayoutDashboard, NotebookTabs, Users } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -50,6 +50,11 @@ export function AppSidebar() {
                   title: "Inventory",
                   url: "/dashboard/inventory",
                   icon: NotebookTabs,
+                },
+                {
+                  title: "Customers",
+                  url: "/dashboard/customers",
+                  icon: Users,
                 },
               ].map(({ title, url, icon }) => {
                 const LinkIcon = icon;

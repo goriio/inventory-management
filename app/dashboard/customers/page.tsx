@@ -1,10 +1,12 @@
 import { AppHeader } from "~/components/app-header";
 
-import { ProductTable } from "./components/product-table";
-import { PaginationBar } from "~/components/pagination-bar";
-import { AddProduct } from "./components/add-product";
+// import { ProductTable } from "./components/product-table";
+// import { AddProduct } from "./components/add-product";
 import { Search } from "~/components/search";
-import { getProductsPages } from "~/data/products";
+import { PaginationBar } from "~/components/pagination-bar";
+import { CustomerTable } from "./components/customer-table";
+import { getCustomersPages } from "~/data/customers";
+import { AddCustomer } from "./components/add-customer";
 
 export default async function Page({
   searchParams,
@@ -15,18 +17,18 @@ export default async function Page({
   const page = Number(params.page) || 1;
   const query = params.query || "";
 
-  const totalPages = await getProductsPages(query);
+  const totalPages = await getCustomersPages(query);
 
   return (
     <>
-      <AppHeader title="Inventory" />
+      <AppHeader title="Customers" />
       <div className="max-w-7xl w-full mx-auto p-4 md:px-8">
         <div className="bg-card rounded-lg overflow-hidden border border-border">
           <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 px-8 py-6">
-            <Search placeholder="Search for products..." />
-            <AddProduct />
+            <Search placeholder="Search for customers..." />
+            <AddCustomer />
           </div>
-          <ProductTable page={page} query={query} />
+          <CustomerTable page={page} query={query} />
           <PaginationBar totalPages={totalPages} />
         </div>
       </div>
