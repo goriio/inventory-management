@@ -44,7 +44,8 @@ export function DeleteProduct({ id }: { id: string }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently the product.
+              This action cannot be undone. This will permanently delete the
+              product.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
