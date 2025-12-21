@@ -17,8 +17,8 @@ export const productFormSchema = z.object({
 export const customerFormSchema = z.object({
   name: z
     .string()
-    .min(1, "Product name is required.")
-    .max(50, "Product name is too long."),
+    .min(1, "Customer name is required.")
+    .max(50, "Customer name is too long."),
   email: z.email("Email must be valid.").max(100, "Email is too long."),
   phoneNumber: z
     .string("Phone number is required.")
@@ -26,5 +26,12 @@ export const customerFormSchema = z.object({
     .optional(),
 });
 
+export const saleFormSchema = z.object({
+  productId: z.string("Product must be valid.").min(1, "Product is required."),
+  customer: z.string("Customer must be valid.").min(1, "Customer is required."),
+  quantity: z.coerce.number().int().min(1, "Quantity is required."),
+});
+
 export type ProductFormSchema = z.infer<typeof productFormSchema>;
 export type CustomerFormSchema = z.infer<typeof customerFormSchema>;
+export type SaleFormSchema = z.infer<typeof saleFormSchema>;

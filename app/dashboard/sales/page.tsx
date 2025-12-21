@@ -2,9 +2,10 @@ import { AppHeader } from "~/components/app-header";
 
 import { Search } from "~/components/search";
 import { PaginationBar } from "~/components/pagination-bar";
-import { CustomerTable } from "./components/customer-table";
-import { getCustomersPages } from "~/data/customers";
-import { AddCustomer } from "./components/add-customer";
+import { getAllCustomers, getCustomersPages } from "~/data/customers";
+import { SalesTable } from "./components/sales-table";
+import { AddSale } from "./components/add-sale";
+import { getAllProducts } from "~/data/products";
 
 export default async function Page({
   searchParams,
@@ -17,16 +18,19 @@ export default async function Page({
 
   const totalPages = await getCustomersPages(query);
 
+  const customers = await getAllCustomers();
+  const products = await getAllProducts();
+
   return (
     <>
-      <AppHeader title="Customers" />
+      <AppHeader title="Sales" />
       <div className="max-w-7xl w-full mx-auto p-4 md:px-8">
         <div className="bg-card rounded-lg overflow-hidden border border-border">
           <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 px-8 py-6">
-            <Search placeholder="Search for customers..." />
-            <AddCustomer />
+            <Search placeholder="Search for sales..." />
+            <AddSale customers={customers} products={products} />
           </div>
-          <CustomerTable page={page} query={query} />
+          <SalesTable page={page} query={query} />
           <PaginationBar totalPages={totalPages} />
         </div>
       </div>

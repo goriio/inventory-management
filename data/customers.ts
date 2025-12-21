@@ -41,6 +41,21 @@ export async function getCustomers({
   return data;
 }
 
+export async function getAllCustomers() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const data = await db
+    .select()
+    .from(customers)
+    .where(eq(customers.userId, session.user.id));
+
+  return data;
+}
+
 export async function getCustomersPages(query: string) {
   const session = await auth.api.getSession({
     headers: await headers(),

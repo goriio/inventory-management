@@ -40,6 +40,21 @@ export async function getProducts({
   return data;
 }
 
+export async function getAllProducts() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const data = await db
+    .select()
+    .from(products)
+    .where(eq(products.userId, session.user.id));
+
+  return data;
+}
+
 export async function getProductById(id: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
