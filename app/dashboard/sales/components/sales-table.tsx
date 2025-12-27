@@ -28,7 +28,7 @@ export function SalesTable({ page, query }: { page: number; query: string }) {
         <thead>
           <tr className="text-left border-b border-background">
             <th className="px-8 py-4 text-xs uppercase text-gray-600">
-              Sales Id
+              Sale Id
             </th>
             <th className="px-8 py-4 text-xs uppercase text-gray-600">
               Product Name
@@ -42,6 +42,7 @@ export function SalesTable({ page, query }: { page: number; query: string }) {
             <th className="px-8 py-4 text-xs uppercase text-gray-600">
               Total Price
             </th>
+            <th className="px-8 py-4 text-xs uppercase text-gray-600">Date</th>
           </tr>
         </thead>
         <Suspense
@@ -125,6 +126,9 @@ async function SalesTableBody({
             <td className="px-8 py-4 text-center">{sale.sales.quantity}</td>
             <td className="px-8 py-4 text-right">
               PHP {sale.sales.totalPrice.toFixed(2)}
+            </td>
+            <td className="px-8 py-4 text-right">
+              {new Date(sale.sales.createdAt).toDateString()}
             </td>
             <td className="px-8 py-4">
               <div className="flex items-center gap-1">

@@ -1,7 +1,7 @@
 import { and, count, eq, lte, not, sql, sum } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "~/db";
-import { customers, products } from "~/db/schema";
+import { customers, products, sales } from "~/db/schema";
 import { auth } from "~/lib/auth";
 
 export async function getTotalProductsPerWeek() {
@@ -104,6 +104,53 @@ export async function getProductDetails() {
     lowStockItems,
     outOfStockItems,
     noOfItems,
+  };
+}
+
+export async function getSalesOverview() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const startCurrent = new Date();
+  startCurrent.setDate(new Date().getDate() - 7);
+
+  const startPrevious = new Date();
+  startPrevious.setDate(new Date().getDate() - 14);
+
+  const [totalSales, revenue, unitsSold] = await Promise.all([
+    db
+      .select({
+        current: sql`count(case when ${sales.createdAt} >= ${startCurrent} then 1 end)`,
+        previous: sql`count(case when ${sales.createdAt} >= ${startPrevious} and ${sales.createdAt} < ${startCurrent} then 1 end)`,
+      })
+      .from(sales)
+      .where(and(eq(sales.userId, session.user.id)))
+      .then((result) => result[0]),
+    db
+      .select({
+        current: sql`sum(case when ${sales.createdAt} >= ${startCurrent} then ${sales.totalPrice} else 0 end)`,
+        previous: sql`sum(case when ${sales.createdAt} >= ${startPrevious} and ${sales.createdAt} < ${startCurrent} then ${sales.totalPrice} else 0 end)`,
+      })
+      .from(sales)
+      .where(and(eq(sales.userId, session.user.id)))
+      .then((result) => result[0]),
+    db
+      .select({
+        current: sql`sum(case when ${sales.createdAt} >= ${startCurrent} then ${sales.quantity} else 0 end)`,
+        previous: sql`sum(case when ${sales.createdAt} >= ${startPrevious} and ${sales.createdAt} < ${startCurrent} then ${sales.quantity} else 0 end)`,
+      })
+      .from(sales)
+      .where(and(eq(sales.userId, session.user.id)))
+      .then((result) => result[0]),
+  ]);
+
+  return {
+    totalSales,
+    revenue,
+    unitsSold,
   };
 }
 
