@@ -1,7 +1,7 @@
 import { and, count, eq, lte, not, sql, sum } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "~/db";
-import { products } from "~/db/schema";
+import { customers, products } from "~/db/schema";
 import { auth } from "~/lib/auth";
 
 export async function getTotalProductsPerWeek() {
@@ -104,5 +104,36 @@ export async function getProductDetails() {
     lowStockItems,
     outOfStockItems,
     noOfItems,
+  };
+}
+
+export async function getNoOfUsers() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const [totalCustomers, newCustomers] = await Promise.all([
+    db
+      .select({ totalCustomers: count() })
+      .from(customers)
+      .where(and(eq(customers.userId, session.user.id)))
+      .then((result) => result[0].totalCustomers),
+    db
+      .select({ totalCustomers: count() })
+      .from(customers)
+      .where(
+        and(
+          eq(customers.userId, session.user.id),
+          sql`${customers.createdAt} >= now() - interval '7 days'`
+        )
+      )
+      .then((result) => result[0].totalCustomers),
+  ]);
+
+  return {
+    totalCustomers,
+    newCustomers,
   };
 }
