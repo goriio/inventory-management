@@ -16,13 +16,13 @@ import {
 } from "~/components/ui/chart";
 
 const chartConfig = {
-  products: {
-    label: "Products",
+  sales: {
+    label: "Sales",
     color: "var(--primary)",
   },
 } satisfies ChartConfig;
 
-export function ProductsChart({
+export function SalesChart({
   data,
 }: {
   data: { week: string; total: number }[];
@@ -30,10 +30,8 @@ export function ProductsChart({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>New Products Per Week</CardTitle>
-        <CardDescription>
-          Number of new products added each week.
-        </CardDescription>
+        <CardTitle>Sales Statistics</CardTitle>
+        <CardDescription>Overview of total sales by week.</CardDescription>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
@@ -42,15 +40,15 @@ export function ProductsChart({
         >
           <AreaChart data={data}>
             <defs>
-              <linearGradient id="fillProducts" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillSales" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-products)"
+                  stopColor="var(--color-sales)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-products)"
+                  stopColor="var(--color-sales)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -92,8 +90,8 @@ export function ProductsChart({
             <Area
               dataKey="total"
               type="natural"
-              fill="url(#fillProducts)"
-              stroke="var(--color-products)"
+              fill="url(#fillSales)"
+              stroke="var(--color-sales)"
               stackId="a"
             />
           </AreaChart>

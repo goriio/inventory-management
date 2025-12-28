@@ -6,6 +6,7 @@ import { InventorySummary } from "./components/inventory-summary";
 import { ProductDetails } from "./components/product-details";
 import { NoOfUsers } from "./components/no-of-users";
 import { SalesOverview } from "./components/sales-overview";
+import { SalesChartContainer } from "./components/sales-chart-container";
 
 export default function Page() {
   return (
@@ -24,6 +25,11 @@ export default function Page() {
             <NoOfUsers />
           </Suspense>
         </div>
+        <Suspense
+          fallback={<Skeleton className="w-full h-100 bg-card shadow" />}
+        >
+          <SalesChartContainer />
+        </Suspense>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Suspense
             fallback={<Skeleton className="w-full h-64 bg-card shadow" />}

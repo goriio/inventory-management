@@ -184,3 +184,30 @@ export async function getNoOfUsers() {
     newCustomers,
   };
 }
+
+export async function getSalesStatistics() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) throw new Error("Unauthorized");
+
+  const week = sql<string>`date_trunc('week', ${sales.createdAt})`;
+
+  const salesStatistics = await db
+    .select({
+      week: week.as("week"),
+      total: count(),
+    })
+    .from(sales)
+    .where(
+      and(
+        eq(sales.userId, session.user.id),
+        sql`${sales.createdAt} >= now() - interval '4 months'`
+      )
+    )
+    .groupBy(week)
+    .orderBy(week);
+
+  return salesStatistics;
+}
