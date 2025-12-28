@@ -9,7 +9,7 @@ import {
 import { getNoOfUsers } from "~/data/dashboard";
 
 export async function NoOfUsers() {
-  const { totalCustomers } = await getNoOfUsers();
+  const { totalCustomers, newCustomers } = await getNoOfUsers();
 
   return (
     <Card>
@@ -25,14 +25,14 @@ export async function NoOfUsers() {
           <UserPlus className="text-blue-500" size={36} />
           <p className="text-sm text-gray-700">New Customers</p>
           <p className="mt-auto text-xl font-bold text-gray-900">
-            {Number(totalCustomers).toLocaleString()}
+            {newCustomers.toLocaleString()}
           </p>
         </div>
         <div className="flex flex-col gap-2 p-4 bg-gray-50 rounded-lg">
           <Users className="text-blue-500" size={36} />
           <p className="text-sm text-gray-700">Total Customers</p>
           <p className="mt-auto text-xl font-bold text-gray-900">
-            {Number(totalCustomers).toLocaleString()}
+            {totalCustomers.toLocaleString()}
           </p>
         </div>
       </CardContent>

@@ -8,14 +8,15 @@ import {
 } from "~/components/ui/card";
 import { getSalesOverview } from "~/data/dashboard";
 import { TrendIndicator } from "./trend-indicator";
+import { formatPrice } from "~/lib/format";
 
 export async function SalesOverview() {
   const { totalSales, revenue, unitsSold } = await getSalesOverview();
 
   const averageOrderValueCurrent =
-    Number(revenue.current) / Number(totalSales.current);
+    Number(revenue.current) / Number(totalSales.current) || 0;
   const averageOrderValuePrevious =
-    Number(revenue.previous) / Number(totalSales.previous);
+    Number(revenue.previous) / Number(totalSales.previous) || 0;
 
   return (
     <Card>
@@ -35,7 +36,7 @@ export async function SalesOverview() {
             <p className="text-sm text-gray-700">Total Sales</p>
             <div className="flex items-center gap-1">
               <p className="mt-auto text-lg font-bold text-gray-900">
-                {Number(totalSales.current)}
+                {Number(totalSales.current).toLocaleString()}
               </p>
               <TrendIndicator
                 current={Number(totalSales.current)}
@@ -52,7 +53,7 @@ export async function SalesOverview() {
             <p className="text-sm text-gray-700">Revenue</p>
             <div className="flex items-center gap-1">
               <p className="mt-auto text-lg font-bold text-gray-900">
-                PHP {Number(revenue.current).toLocaleString()}
+                PHP {formatPrice(Number(revenue.current))}
               </p>
               <TrendIndicator
                 current={Number(revenue.current)}
@@ -87,8 +88,7 @@ export async function SalesOverview() {
             <p className="text-sm text-gray-700">Average Order Value</p>
             <div className="flex items-center gap-1">
               <p className="mt-auto text-lg font-bold text-gray-900">
-                PHP{" "}
-                {Number(averageOrderValueCurrent.toFixed(2)).toLocaleString()}
+                PHP {formatPrice(averageOrderValueCurrent)}
               </p>
               <TrendIndicator
                 current={Number(averageOrderValueCurrent)}

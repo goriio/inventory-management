@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { getInventorySummary } from "~/data/dashboard";
+import { formatPrice } from "~/lib/format";
 
 export async function InventorySummary() {
   const { quantityInHand, totalValue } = await getInventorySummary();
@@ -32,7 +33,7 @@ export async function InventorySummary() {
           <HandCoins className="text-green-500" size={36} />
           <p className="text-sm text-gray-700">Total Value</p>
           <p className="mt-auto text-xl font-bold text-gray-900">
-            PHP {totalValue.toLocaleString()}
+            PHP {formatPrice(totalValue)}
           </p>
         </div>
       </CardContent>

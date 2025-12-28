@@ -1,87 +1,87 @@
 "use server";
 
 import { db } from "~/db";
-import { products } from "~/db/schema";
+import { customers, products, sales } from "~/db/schema";
+import { faker } from "@faker-js/faker";
 
 export async function seed(userId: string) {
-  const endTime = Date.now();
-
-  const startDate = new Date();
-  startDate.setMonth(startDate.getMonth() - 4);
-  const startTime = new Date("2025-10-01").getTime();
-
-  await db.insert(products).values(
-    Array.from({ length: 57 }).map((_, index) => ({
-      userId: userId,
-      name: `Product ${index + 1}`,
-      price: parseFloat((Math.random() * 100).toFixed(2)),
-      description: generateDescription(),
-      quantity: Math.ceil(Math.random() * 120),
-      lowStockThreshold: Math.ceil(Math.random() * 20),
-      createdAt: new Date(startTime + Math.random() * (endTime - startTime)),
-    }))
-  );
-}
-
-const adjectives = [
-  "amazing",
-  "fantastic",
-  "mysterious",
-  "incredible",
-  "bizarre",
-];
-const nouns = ["adventure", "journey", "experience", "story", "situation"];
-const verbs = ["awaits", "unfolds", "happens", "emerges", "begins"];
-const places = [
-  "in the forest",
-  "on the mountain",
-  "under the sea",
-  "in a small village",
-  "in a distant galaxy",
-];
-const extras = [
-  "with unexpected twists",
-  "full of surprises",
-  "that changes everything",
-  "beyond imagination",
-  "that no one expects",
-];
-
-function getRandom(arr: string[]) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function generateDescription() {
-  if (Math.random() < 0.3) return null;
-
-  const numSentences = Math.floor(Math.random() * 3) + 1;
-
-  let description = "";
-
-  for (let i = 0; i < numSentences; i++) {
-    const sentenceType = Math.floor(Math.random() * 3);
-
-    let sentence = "";
-    switch (sentenceType) {
-      case 0:
-        sentence = `A ${getRandom(adjectives)} ${getRandom(nouns)} ${getRandom(
-          verbs
-        )} ${getRandom(places)}.`;
-        break;
-      case 1:
-        sentence = `In a ${getRandom(adjectives)} twist, ${getRandom(
-          nouns
-        )} ${getRandom(verbs)} ${getRandom(places)}.`;
-        break;
-      case 2:
-        sentence = `${getRandom(nouns)} ${getRandom(verbs)} ${getRandom(
-          places
-        )} ${getRandom(extras)}.`;
-        break;
+  const productsData = faker.helpers.multiple(
+    () => ({
+      userId,
+      name: faker.commerce.productName(),
+      price: Number(
+        faker.commerce.price({
+          min: 20,
+          max: 500,
+        })
+      ),
+      description: faker.commerce.productDescription(),
+      quantity: faker.number.int({ min: 0, max: 70 }),
+      lowStockThreshold: faker.number.int({ min: 0, max: 20 }),
+      createdAt: faker.date.recent({ days: 60 }),
+    }),
+    {
+      count: 57,
     }
+  );
 
-    description += sentence + " ";
-  }
+  const customersData = faker.helpers.multiple(
+    () => {
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
 
-  return description.trim();
+      return {
+        userId,
+        name: faker.person.fullName({
+          firstName,
+          lastName,
+        }),
+        email: faker.internet.email({
+          firstName,
+          lastName,
+        }),
+        phoneNumber: faker.datatype.boolean()
+          ? faker.phone.number({ style: "national" })
+          : undefined,
+        createdAt: faker.date.recent({ days: 60 }),
+      };
+    },
+    {
+      count: 17,
+    }
+  );
+
+  const insertedProducts = await db
+    .insert(products)
+    .values(productsData)
+    .returning();
+
+  const insertedCustomers = await db
+    .insert(customers)
+    .values(customersData)
+    .returning();
+
+  const salesData = faker.helpers.multiple(
+    () => {
+      const customer = faker.helpers.arrayElement(insertedCustomers);
+      const product = faker.helpers.arrayElement(insertedProducts);
+
+      const quantity = faker.number.int({ min: 1, max: 10 });
+
+      return {
+        userId,
+        customerId: customer.id,
+        productId: product.id,
+        quantity,
+        totalPrice: quantity * product.price,
+        createdAt: faker.date.between({
+          from: product.createdAt,
+          to: new Date(),
+        }),
+      };
+    },
+    { count: 25 }
+  );
+
+  await db.insert(sales).values(salesData);
 }
