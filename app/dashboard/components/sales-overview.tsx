@@ -27,7 +27,7 @@ export async function SalesOverview() {
           previous week.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <CardContent className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-purple-500/10 rounded-md">
             <Handbag className="text-purple-500" size={24} />

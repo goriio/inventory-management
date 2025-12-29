@@ -21,7 +21,7 @@ export async function InventorySummary() {
           all products.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-2 gap-4">
+      <CardContent className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 p-4 bg-gray-50 rounded-lg">
           <Package className="text-yellow-500" size={36} />
           <p className="text-sm text-gray-700">Quantity in Hand</p>
