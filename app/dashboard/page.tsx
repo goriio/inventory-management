@@ -7,6 +7,11 @@ import { ProductDetails } from "./components/product-details";
 import { NoOfUsers } from "./components/no-of-users";
 import { SalesOverview } from "./components/sales-overview";
 import { SalesChartContainer } from "./components/sales-chart-container";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 export default function Page() {
   return (
@@ -22,7 +27,7 @@ export default function Page() {
           <Suspense
             fallback={<Skeleton className="w-full h-64 bg-card shadow" />}
           >
-            <NoOfUsers />
+            <InventorySummary />
           </Suspense>
         </div>
         <Suspense
@@ -34,7 +39,7 @@ export default function Page() {
           <Suspense
             fallback={<Skeleton className="w-full h-64 bg-card shadow" />}
           >
-            <InventorySummary />
+            <NoOfUsers />
           </Suspense>
           <Suspense
             fallback={<Skeleton className="w-full h-64 bg-card shadow" />}

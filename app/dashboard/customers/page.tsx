@@ -5,6 +5,11 @@ import { PaginationBar } from "~/components/pagination-bar";
 import { CustomerTable } from "./components/customer-table";
 import { getCustomersPages } from "~/data/customers";
 import { AddCustomer } from "./components/add-customer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Customers",
+};
 
 export default async function Page({
   searchParams,

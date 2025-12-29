@@ -5,6 +5,11 @@ import { PaginationBar } from "~/components/pagination-bar";
 import { AddProduct } from "./components/add-product";
 import { Search } from "~/components/search";
 import { getProductsPages } from "~/data/products";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Inventory",
+};
 
 export default async function Page({
   searchParams,

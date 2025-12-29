@@ -6,6 +6,11 @@ import { getAllCustomers, getCustomersPages } from "~/data/customers";
 import { SalesTable } from "./components/sales-table";
 import { AddSale } from "./components/add-sale";
 import { getAllProducts } from "~/data/products";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sales",
+};
 
 export default async function Page({
   searchParams,

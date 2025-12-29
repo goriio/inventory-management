@@ -72,6 +72,7 @@ export function SalesChart({
               width={24}
               tickLine={false}
               axisLine={false}
+              domain={[0, (dataMax: number) => Math.floor(dataMax * 1.2)]}
             />
             <ChartTooltip
               cursor={false}
