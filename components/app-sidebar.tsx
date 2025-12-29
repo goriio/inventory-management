@@ -111,7 +111,7 @@ export function AppSidebar() {
                     await signOut({
                       fetchOptions: {
                         onSuccess: () => {
-                          router.push("/login");
+                          router.push("/");
                           toast.success("You have been logged out.");
                         },
                       },
